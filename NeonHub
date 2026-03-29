@@ -1,0 +1,609 @@
+local XenoLib = {}
+
+-- BİLDİRİM SİSTEMİ (XenoLib'e eklendi)
+function XenoLib:Notify(title, text, duration)
+    local NotifyGui = game:GetService("CoreGui"):FindFirstChild("XenoNotifications")
+    if not NotifyGui then
+        NotifyGui = Instance.new("ScreenGui", game:GetService("CoreGui"))
+        NotifyGui.Name = "XenoNotifications"
+    end
+
+    local NotifFrame = Instance.new("Frame", NotifyGui)
+    NotifFrame.Size = UDim2.new(0, 260, 0, 65)
+    NotifFrame.Position = UDim2.new(1, 30, 1, -80)
+    NotifFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+    Instance.new("UICorner", NotifFrame).CornerRadius = UDim.new(0, 8)
+    
+    local TitleL = Instance.new("TextLabel", NotifFrame)
+    TitleL.Text = "  " .. title
+    TitleL.Size = UDim2.new(1, 0, 0, 25)
+    TitleL.TextColor3 = Color3.fromRGB(0, 150, 255)
+    TitleL.Font = Enum.Font.GothamBold
+    TitleL.TextSize = 14
+    TitleL.BackgroundTransparency = 1
+    TitleL.TextXAlignment = Enum.TextXAlignment.Left
+
+    local TextL = Instance.new("TextLabel", NotifFrame)
+    TextL.Text = "  " .. text
+    TextL.Size = UDim2.new(1, 0, 1, -25)
+    TextL.Position = UDim2.new(0, 0, 0, 25)
+    TextL.TextColor3 = Color3.fromRGB(200, 200, 200)
+    TextL.Font = Enum.Font.GothamMedium
+    TextL.TextSize = 12
+    TextL.BackgroundTransparency = 1
+    TextL.TextWrapped = true
+    TextL.TextXAlignment = Enum.TextXAlignment.Left
+
+    NotifFrame:TweenPosition(UDim2.new(1, -270, 1, -80), "Out", "Quart", 0.5, true)
+    task.delay(duration or 3, function()
+        NotifFrame:TweenPosition(UDim2.new(1, 30, 1, -80), "In", "Quart", 0.5, true)
+        task.wait(0.5)
+        NotifFrame:Destroy()
+    end)
+end
+
+function XenoLib:CreateWindow(title)
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Name = "XenoFinal_V6_1"
+    ScreenGui.Parent = game:GetService("CoreGui")
+    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+    local MainFrame = Instance.new("Frame")
+    MainFrame.Parent = ScreenGui
+    MainFrame.BackgroundColor3 = Color3.fromRGB(13, 13, 13)
+    MainFrame.Size = UDim2.new(0, 580, 0, 400)
+    MainFrame.Position = UDim2.new(0.5, -290, 0.5, -200)
+    MainFrame.BorderSizePixel = 0
+    MainFrame.Active = true
+    MainFrame.Draggable = true
+    Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 12)
+
+    local TopBar = Instance.new("Frame", MainFrame)
+    TopBar.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+    TopBar.Size = UDim2.new(1, 0, 0, 45)
+    Instance.new("UICorner", TopBar).CornerRadius = UDim.new(0, 12)
+
+    local TitleLabel = Instance.new("TextLabel", TopBar)
+    TitleLabel.Text = "  " .. title
+    TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TitleLabel.Font = Enum.Font.GothamBold
+    TitleLabel.TextSize = 16
+    TitleLabel.Size = UDim2.new(1, 0, 1, 0)
+    TitleLabel.BackgroundTransparency = 1
+    TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+    local SideBar = Instance.new("Frame", MainFrame)
+    SideBar.BackgroundColor3 = Color3.fromRGB(16, 16, 16)
+    SideBar.Position = UDim2.new(0, 0, 0, 45)
+    SideBar.Size = UDim2.new(0, 160, 1, -45)
+    Instance.new("UICorner", SideBar).CornerRadius = UDim.new(0, 12)
+
+    local TabContainer = Instance.new("ScrollingFrame", SideBar)
+    TabContainer.Size = UDim2.new(1, 0, 1, -65)
+    TabContainer.BackgroundTransparency = 1
+    TabContainer.ScrollBarThickness = 0
+    Instance.new("UIListLayout", TabContainer).Padding = UDim.new(0, 6)
+
+    local PageView = Instance.new("Frame", MainFrame)
+    PageView.Position = UDim2.new(0, 175, 0, 60)
+    PageView.Size = UDim2.new(1, -190, 1, -75)
+    PageView.BackgroundTransparency = 1
+
+    local Library = {}
+
+    function Library:NewTab(name, iconId)
+        local Page = Instance.new("ScrollingFrame", PageView)
+        Page.Size = UDim2.new(1, 0, 1, 0)
+        Page.BackgroundTransparency = 1
+        Page.Visible = false
+        Page.ScrollBarThickness = 2
+        Instance.new("UIListLayout", Page).Padding = UDim.new(0, 10)
+
+        local TabBtn = Instance.new("TextButton", TabContainer)
+        TabBtn.Size = UDim2.new(1, -16, 0, 40)
+        TabBtn.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
+        TabBtn.Text = "          " .. name
+        TabBtn.TextColor3 = Color3.fromRGB(200, 200, 200)
+        TabBtn.Font = Enum.Font.GothamBold
+        TabBtn.TextSize = 14
+        TabBtn.TextXAlignment = Enum.TextXAlignment.Left
+        Instance.new("UICorner", TabBtn).CornerRadius = UDim.new(0, 8)
+
+        local TabIcon = Instance.new("ImageLabel", TabBtn)
+        TabIcon.Size = UDim2.new(0, 18, 0, 18)
+        TabIcon.Position = UDim2.new(0, 10, 0.5, -9)
+        TabIcon.BackgroundTransparency = 1
+        TabIcon.Image = "rbxassetid://" .. (iconId or "4483345998")
+
+        TabBtn.MouseButton1Click:Connect(function()
+            for _, v in pairs(PageView:GetChildren()) do if v:IsA("ScrollingFrame") then v.Visible = false end end
+            Page.Visible = true
+        end)
+
+        local Elements = {}
+
+        -- MODERN KEYBIND SYSTEM
+function Elements:AddKeybind(text, default, callback)
+    local KeybindFrame = Instance.new("Frame", Page)
+    KeybindFrame.Size = UDim2.new(1, -5, 0, 45)
+    KeybindFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    Instance.new("UICorner", KeybindFrame).CornerRadius = UDim.new(0, 8)
+
+    local Title = Instance.new("TextLabel", KeybindFrame)
+    Title.Text = "   " .. text
+    Title.Size = UDim2.new(1, 0, 1, 0)
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Title.BackgroundTransparency = 1
+    Title.Font = Enum.Font.GothamMedium
+    Title.TextSize = 14
+    Title.TextXAlignment = Enum.TextXAlignment.Left
+
+    local BindBtn = Instance.new("TextButton", KeybindFrame)
+    BindBtn.Size = UDim2.new(0, 80, 0, 25)
+    BindBtn.Position = UDim2.new(1, -90, 0.5, -12)
+    BindBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    BindBtn.Text = default.Name
+    BindBtn.TextColor3 = Color3.fromRGB(0, 150, 255)
+    BindBtn.Font = Enum.Font.GothamBold
+    BindBtn.TextSize = 12
+    Instance.new("UICorner", BindBtn).CornerRadius = UDim.new(0, 6)
+    
+    local currentBind = default
+    local waitForKey = false
+
+    BindBtn.MouseButton1Click:Connect(function()
+        waitForKey = true
+        BindBtn.Text = "..."
+        BindBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    end)
+
+    game:GetService("UserInputService").InputBegan:Connect(function(input, gpe)
+        if not gpe then
+            if waitForKey and input.UserInputType == Enum.UserInputType.Keyboard then
+                currentBind = input.KeyCode
+                BindBtn.Text = currentBind.Name
+                BindBtn.TextColor3 = Color3.fromRGB(0, 150, 255)
+                waitForKey = false
+            elseif input.KeyCode == currentBind then
+                callback()
+            end
+        end
+    end)
+end
+
+        -- ELEMENT: BUTTON (YENİ)
+        function Elements:AddButton(text, callback)
+            local Btn = Instance.new("TextButton", Page)
+            Btn.Size = UDim2.new(1, -5, 0, 40)
+            Btn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+            Btn.Text = text
+            Btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+            Btn.Font = Enum.Font.GothamMedium
+            Btn.TextSize = 14
+            Instance.new("UICorner", Btn).CornerRadius = UDim.new(0, 8)
+
+            Btn.MouseButton1Click:Connect(function()
+                callback()
+            end)
+        end
+
+        -- MODERN VE ÖZELLEŞTİRİLMİŞ SLIDER
+function Elements:AddSlider(text, min, max, default, callback)
+    local SliderFrame = Instance.new("Frame", Page)
+    SliderFrame.Size = UDim2.new(1, -5, 0, 60) -- Biraz daha genişlettik, daha ferah durur
+    SliderFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    Instance.new("UICorner", SliderFrame).CornerRadius = UDim.new(0, 8)
+
+    local Title = Instance.new("TextLabel", SliderFrame)
+    Title.Text = "   " .. text
+    Title.Size = UDim2.new(1, 0, 0, 30)
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Title.BackgroundTransparency = 1
+    Title.Font = Enum.Font.GothamMedium
+    Title.TextSize = 13
+    Title.TextXAlignment = Enum.TextXAlignment.Left
+
+    local ValueLabel = Instance.new("TextLabel", SliderFrame)
+    ValueLabel.Text = tostring(default) .. " "
+    ValueLabel.Size = UDim2.new(1, -12, 0, 30)
+    ValueLabel.TextColor3 = Color3.fromRGB(0, 150, 255) -- Değer rengi daha canlı
+    ValueLabel.BackgroundTransparency = 1
+    ValueLabel.Font = Enum.Font.GothamBold
+    ValueLabel.TextSize = 13
+    ValueLabel.TextXAlignment = Enum.TextXAlignment.Right
+
+    local SliderBack = Instance.new("Frame", SliderFrame)
+    SliderBack.Size = UDim2.new(1, -25, 0, 4) -- İnce ve zarif bir hat
+    SliderBack.Position = UDim2.new(0, 12, 0, 42)
+    SliderBack.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    Instance.new("UICorner", SliderBack)
+
+    local SliderFill = Instance.new("Frame", SliderBack)
+    SliderFill.Size = UDim2.new((default - min) / (max - min), 0, 1, 0)
+    SliderFill.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
+    Instance.new("UICorner", SliderFill)
+
+    -- Tutamaç (Knob)
+    local Knob = Instance.new("Frame", SliderFill)
+    Knob.Size = UDim2.new(0, 12, 0, 12)
+    Knob.Position = UDim2.new(1, -6, 0.5, -6)
+    Knob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Instance.new("UICorner", Knob).CornerRadius = UDim.new(1, 0)
+    
+    -- Görsel parlatma (Stroke)
+    local Stroke = Instance.new("UIStroke", Knob)
+    Stroke.Color = Color3.fromRGB(0, 150, 255)
+    Stroke.Thickness = 2
+
+    local dragging = false
+    local UIS = game:GetService("UserInputService")
+    local TS = game:GetService("TweenService")
+
+    local function update(input)
+        local pos = math.clamp((input.Position.X - SliderBack.AbsolutePosition.X) / SliderBack.AbsoluteSize.X, 0, 1)
+        local val = math.floor(min + (max - min) * pos)
+        
+        -- Yumuşak hareket için Tween
+        TS:Create(SliderFill, TweenInfo.new(0.1, Enum.EasingStyle.Quart), {
+            Size = UDim2.new(pos, 0, 1, 0)
+        }):Play()
+        
+        ValueLabel.Text = tostring(val) .. " "
+        callback(val)
+    end
+
+    SliderFrame.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            update(input)
+        end
+    end)
+
+    UIS.InputChanged:Connect(function(input)
+        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+            update(input)
+        end
+    end)
+
+    UIS.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = false
+        end
+    end)
+    
+    -- Hover Efekti
+    SliderFrame.MouseEnter:Connect(function()
+        TS:Create(SliderFrame, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(25, 25, 25)}):Play()
+        TS:Create(Stroke, TweenInfo.new(0.3), {Thickness = 3}):Play()
+    end)
+
+    SliderFrame.MouseLeave:Connect(function()
+        TS:Create(SliderFrame, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(20, 20, 20)}):Play()
+        TS:Create(Stroke, TweenInfo.new(0.3), {Thickness = 2}):Play()
+    end)
+end
+
+        -- TAMAMEN ÇALIŞAN VE MODERN COLOR PICKER
+function Elements:AddColorPicker(text, default, callback)
+    local CPFrame = Instance.new("Frame", Page)
+    CPFrame.Size = UDim2.new(1, -5, 0, 45)
+    CPFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    CPFrame.ClipsDescendants = true
+    Instance.new("UICorner", CPFrame).CornerRadius = UDim.new(0, 8)
+
+    local Title = Instance.new("TextLabel", CPFrame)
+    Title.Text = "   " .. text
+    Title.Size = UDim2.new(1, 0, 0, 45)
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Title.BackgroundTransparency = 1
+    Title.Font = Enum.Font.GothamMedium
+    Title.TextSize = 14
+    Title.TextXAlignment = Enum.TextXAlignment.Left
+
+    local ColorPreview = Instance.new("Frame", CPFrame)
+    ColorPreview.Size = UDim2.new(0, 35, 0, 22)
+    ColorPreview.Position = UDim2.new(1, -45, 0, 11)
+    ColorPreview.BackgroundColor3 = default
+    Instance.new("UICorner", ColorPreview).CornerRadius = UDim.new(0, 4)
+
+    local OpenBtn = Instance.new("TextButton", CPFrame)
+    OpenBtn.Size = UDim2.new(1, 0, 0, 45)
+    OpenBtn.BackgroundTransparency = 1
+    OpenBtn.Text = ""
+
+    local PickerPanel = Instance.new("Frame", CPFrame)
+    PickerPanel.Size = UDim2.new(1, -20, 0, 80)
+    PickerPanel.Position = UDim2.new(0, 10, 0, 50)
+    PickerPanel.BackgroundTransparency = 1
+
+    -- HUE (RENK) SLIDER
+    local HueFrame = Instance.new("Frame", PickerPanel)
+    HueFrame.Size = UDim2.new(1, 0, 0, 20)
+    HueFrame.BackgroundColor3 = Color3.new(1, 1, 1)
+    Instance.new("UICorner", HueFrame)
+
+    local HueGradient = Instance.new("UIGradient", HueFrame)
+    HueGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)),
+        ColorSequenceKeypoint.new(0.16, Color3.fromRGB(255, 255, 0)),
+        ColorSequenceKeypoint.new(0.33, Color3.fromRGB(0, 255, 0)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 255, 255)),
+        ColorSequenceKeypoint.new(0.66, Color3.fromRGB(0, 0, 255)),
+        ColorSequenceKeypoint.new(0.83, Color3.fromRGB(255, 0, 255)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 0))
+    })
+
+    -- PARLAKLIK (V) SLIDER
+    local ValueFrame = Instance.new("Frame", PickerPanel)
+    ValueFrame.Size = UDim2.new(1, 0, 0, 20)
+    ValueFrame.Position = UDim2.new(0, 0, 0, 35)
+    Instance.new("UICorner", ValueFrame)
+
+    local ValueGradient = Instance.new("UIGradient", ValueFrame)
+    
+    -- MANTIK DEĞİŞKENLERİ
+    local h, s, v = Color3.toHSV(default)
+    local isOpen = false
+    local UIS = game:GetService("UserInputService")
+
+    local function update()
+        local color = Color3.fromHSV(h, s, v)
+        ColorPreview.BackgroundColor3 = color
+        ValueGradient.Color = ColorSequence.new(Color3.new(1,1,1), Color3.fromHSV(h, 1, 1))
+        callback(color)
+    end
+
+    -- SÜRÜKLEME FONKSİYONU (Daha stabil)
+    local function setupSlider(frame, type)
+        frame.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                local connection
+                connection = UIS.InputChanged:Connect(function(change)
+                    if change.UserInputType == Enum.UserInputType.MouseMovement then
+                        local rel = math.clamp((change.Position.X - frame.AbsolutePosition.X) / frame.AbsoluteSize.X, 0, 1)
+                        if type == "h" then h = rel else v = rel end
+                        update()
+                    end
+                end)
+                UIS.InputEnded:Connect(function(ended)
+                    if ended.UserInputType == Enum.UserInputType.MouseButton1 then
+                        connection:Disconnect()
+                    end
+                end)
+                -- İlk tıklama için:
+                local rel = math.clamp((input.Position.X - frame.AbsolutePosition.X) / frame.AbsoluteSize.X, 0, 1)
+                if type == "h" then h = rel else v = rel end
+                update()
+            end
+        end)
+    end
+
+    setupSlider(HueFrame, "h")
+    setupSlider(ValueFrame, "v")
+
+    OpenBtn.MouseButton1Click:Connect(function()
+        isOpen = not isOpen
+        CPFrame:TweenSize(isOpen and UDim2.new(1, -5, 0, 115) or UDim2.new(1, -5, 0, 45), "Out", "Quart", 0.3, true)
+    end)
+
+    update() -- İlk açılışta rengi ayarla
+end
+
+        -- MEVCUT PLAYER DROPDOWN (Değişmedi)
+        function Elements:AddPlayerDropdown(text, callback)
+            local DropdownFrame = Instance.new("Frame", Page)
+            DropdownFrame.Size = UDim2.new(1, -5, 0, 45)
+            DropdownFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+            DropdownFrame.ClipsDescendants = true
+            Instance.new("UICorner", DropdownFrame).CornerRadius = UDim.new(0, 8)
+
+            local DropBtn = Instance.new("TextButton", DropdownFrame)
+            DropBtn.Size = UDim2.new(1, 0, 0, 45)
+            DropBtn.BackgroundTransparency = 1
+            DropBtn.Text = "   " .. text
+            DropBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+            DropBtn.Font = Enum.Font.GothamBold
+            DropBtn.TextSize = 15
+            DropBtn.TextXAlignment = Enum.TextXAlignment.Left
+
+            local Arrow = Instance.new("TextLabel", DropBtn)
+            Arrow.Text = "▼"
+            Arrow.Size = UDim2.new(0, 30, 1, 0)
+            Arrow.Position = UDim2.new(1, -35, 0, 0)
+            Arrow.TextColor3 = Color3.fromRGB(200, 200, 200)
+            Arrow.BackgroundTransparency = 1
+
+            local ScrollList = Instance.new("ScrollingFrame", DropdownFrame)
+            ScrollList.Position = UDim2.new(0, 5, 0, 45)
+            ScrollList.Size = UDim2.new(1, -10, 0, 140)
+            ScrollList.BackgroundTransparency = 1
+            ScrollList.ScrollBarThickness = 4
+            ScrollList.ScrollBarImageColor3 = Color3.fromRGB(60, 60, 60)
+
+            local ListLayout = Instance.new("UIListLayout", ScrollList)
+            ListLayout.Padding = UDim.new(0, 4)
+            ListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+                ScrollList.CanvasSize = UDim2.new(0, 0, 0, ListLayout.AbsoluteContentSize.Y + 10)
+            end)
+
+            local isOpen = false
+            DropBtn.MouseButton1Click:Connect(function()
+                isOpen = not isOpen
+                local targetSize = isOpen and UDim2.new(1, -5, 0, 200) or UDim2.new(1, -5, 0, 45)
+                DropdownFrame:TweenSize(targetSize, "Out", "Quart", 0.3, true)
+                Arrow.Text = isOpen and "▲" or "▼"
+                for _, v in pairs(ScrollList:GetChildren()) do if v:IsA("TextButton") then v:Destroy() end end
+                if isOpen then
+                    for _, player in pairs(game.Players:GetPlayers()) do
+                        local PBtn = Instance.new("TextButton", ScrollList)
+                        PBtn.Size = UDim2.new(1, -10, 0, 32)
+                        PBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+                        PBtn.Text = "  " .. player.DisplayName
+                        PBtn.TextColor3 = Color3.fromRGB(220, 220, 220)
+                        PBtn.Font = Enum.Font.GothamMedium
+                        PBtn.TextSize = 13
+                        PBtn.TextXAlignment = Enum.TextXAlignment.Left
+                        Instance.new("UICorner", PBtn).CornerRadius = UDim.new(0, 6)
+                        PBtn.MouseButton1Click:Connect(function()
+                            DropBtn.Text = "   Seçildi: " .. player.DisplayName
+                            callback(player)
+                            isOpen = false
+                            DropdownFrame:TweenSize(UDim2.new(1, -5, 0, 45), "Out", "Quart", 0.3, true)
+                            Arrow.Text = "▼"
+                        end)
+                    end
+                end
+            end)
+        end
+
+        -- ELEMENT: TEXTBOX (METİN KUTUSU)
+function Elements:AddTextBox(text, placeholder, callback)
+    local TextFrame = Instance.new("Frame", Page)
+    TextFrame.Size = UDim2.new(1, -5, 0, 45)
+    TextFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    Instance.new("UICorner", TextFrame).CornerRadius = UDim.new(0, 8)
+
+    local Title = Instance.new("TextLabel", TextFrame)
+    Title.Text = "   " .. text
+    Title.Size = UDim2.new(0.4, 0, 1, 0)
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Title.BackgroundTransparency = 1
+    Title.Font = Enum.Font.GothamMedium
+    Title.TextSize = 14
+    Title.TextXAlignment = Enum.TextXAlignment.Left
+
+    local BoxFrame = Instance.new("Frame", TextFrame)
+    BoxFrame.Size = UDim2.new(0.5, 0, 0, 25)
+    BoxFrame.Position = UDim2.new(1, -10, 0.5, 0)
+    BoxFrame.AnchorPoint = Vector2.new(1, 0.5)
+    BoxFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    Instance.new("UICorner", BoxFrame).CornerRadius = UDim.new(0, 6)
+    -- Kenarlık (Seçilen Tema Rengine Göre)
+    local UIStroke = Instance.new("UIStroke", BoxFrame)
+    UIStroke.Color = XenoLib.AccentColor or Color3.fromRGB(0, 150, 255)
+    UIStroke.Thickness = 1
+    UIStroke.Transparency = 0.5
+
+    local Input = Instance.new("TextBox", BoxFrame)
+    Input.Size = UDim2.new(1, -10, 1, 0)
+    Input.Position = UDim2.new(0, 5, 0, 0)
+    Input.BackgroundTransparency = 1
+    Input.Text = ""
+    Input.PlaceholderText = placeholder or "Yazınız..."
+    Input.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Input.PlaceholderColor3 = Color3.fromRGB(100, 100, 100)
+    Input.Font = Enum.Font.Gotham
+    Input.TextSize = 12
+    Input.ClearTextOnFocus = false -- Tıklayınca metin silinmesin
+
+    -- Metin girilip Enter'a basıldığında çalışır
+    Input.FocusLost:Connect(function(enterPressed)
+        if enterPressed then
+            callback(Input.Text)
+        end
+    end)
+end
+
+        -- MODERN VE ANİMASYONLU TOGGLE
+function Elements:AddToggle(text, callback)
+    local TglBtn = Instance.new("TextButton", Page)
+    TglBtn.Size = UDim2.new(1, -5, 0, 45)
+    TglBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    TglBtn.Text = "   " .. text
+    TglBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TglBtn.Font = Enum.Font.GothamMedium
+    TglBtn.TextSize = 14
+    TglBtn.TextXAlignment = Enum.TextXAlignment.Left
+    TglBtn.AutoButtonColor = false -- Varsayılan tıklama efektini kapattık
+    Instance.new("UICorner", TglBtn).CornerRadius = UDim.new(0, 8)
+    
+    -- Toggle Arka Planı (Switch Track)
+    local Track = Instance.new("Frame", TglBtn)
+    Track.Position = UDim2.new(1, -50, 0.5, -11)
+    Track.Size = UDim2.new(0, 40, 0, 22)
+    Track.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    Instance.new("UICorner", Track).CornerRadius = UDim.new(1, 0)
+    
+    -- İç Parlama/Çizgi (Opsiyonel görsel şıklık)
+    local TrackStroke = Instance.new("UIStroke", Track)
+    TrackStroke.Color = Color3.fromRGB(255, 255, 255)
+    TrackStroke.Transparency = 0.95
+    TrackStroke.Thickness = 1
+
+    -- Hareket Eden Yuvarlak (Knob)
+    local Knob = Instance.new("Frame", Track)
+    Knob.Size = UDim2.new(0, 16, 0, 16)
+    Knob.Position = UDim2.new(0, 3, 0.5, -8)
+    Knob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Instance.new("UICorner", Knob).CornerRadius = UDim.new(1, 0)
+    
+    local State = false
+    local TS = game:GetService("TweenService")
+
+    TglBtn.MouseButton1Click:Connect(function()
+        State = not State
+        
+        -- Renk ve Pozisyon Animasyonu
+        local targetPos = State and UDim2.new(1, -19, 0.5, -8) or UDim2.new(0, 3, 0.5, -8)
+        local targetColor = State and Color3.fromRGB(0, 150, 255) or Color3.fromRGB(40, 40, 40)
+        
+        -- Knob Sıkışma/Uzatma Efekti (Squash & Stretch)
+        TS:Create(Knob, TweenInfo.new(0.15, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {
+            Size = UDim2.new(0, 22, 0, 16), -- Hareket anında biraz uzar
+            Position = targetPos
+        }):Play()
+        
+        task.delay(0.1, function()
+            TS:Create(Knob, TweenInfo.new(0.15, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+                Size = UDim2.new(0, 16, 0, 16) -- Durduğunda normale döner
+            }):Play()
+        end)
+
+        -- Track Renk Animasyonu
+        TS:Create(Track, TweenInfo.new(0.3, Enum.EasingStyle.Quart), {
+            BackgroundColor3 = targetColor
+        }):Play()
+
+        callback(State)
+    end)
+    
+    -- Hover Efektleri
+    TglBtn.MouseEnter:Connect(function()
+        TS:Create(TglBtn, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(25, 25, 25)}):Play()
+    end)
+
+    TglBtn.MouseLeave:Connect(function()
+        TS:Create(TglBtn, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(20, 20, 20)}):Play()
+    end)
+end
+
+-- ... diğer elementlerin (AddButton, AddSlider vb.) ...
+
+        -- ELEMENT: SECTION (Listenin sonuna ekleyebilirsin)
+        function Elements:AddSection(text)
+            local SectionFrame = Instance.new("Frame", Page)
+            SectionFrame.Size = UDim2.new(1, -5, 0, 35)
+            SectionFrame.BackgroundTransparency = 1
+
+            local SectionText = Instance.new("TextLabel", SectionFrame)
+            SectionText.Text = string.upper(text)
+            SectionText.Size = UDim2.new(1, 0, 1, 0)
+            SectionText.TextColor3 = Color3.fromRGB(0, 150, 255)
+            SectionText.Font = Enum.Font.GothamBold
+            SectionText.TextSize = 18
+            SectionText.BackgroundTransparency = 1
+            SectionText.TextXAlignment = Enum.TextXAlignment.Left
+            SectionText.Position = UDim2.new(0, 4, 0, 0)
+            
+            local Line = Instance.new("Frame", SectionFrame)
+            Line.Size = UDim2.new(1, -10, 0, 1)
+            Line.Position = UDim2.new(0, 5, 1, -2)
+            Line.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+            Line.BorderSizePixel = 0
+        end
+
+        return Elements
+    end
+
+    return Library
+end
